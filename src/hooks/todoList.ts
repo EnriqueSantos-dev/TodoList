@@ -37,7 +37,6 @@ const reducer = (state: ItemList[], action: ACTION_REDUCER) => {
           complete: false,
           date: new Date(),
         });
-        console.log(tempTodo);
         return tempTodo;
       }
     case ACTION_TODO.DELETE_TODO:
