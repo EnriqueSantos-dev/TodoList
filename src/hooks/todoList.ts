@@ -12,18 +12,18 @@ export const ACTION_TODO = {
   ADD_TODO: 'add-todo',
   DELETE_TODO: 'delete-todo',
   TOGGLE_TODO: 'toggle-todo',
-  ORDER_BY_DATE: 'order',
+  ORDER_BY_DATE: 'order'
 };
 
 export type ACTION_REDUCER = {
   type: string;
   payload?: {
-    id?: string;
+    id: string;
     description?: string;
   };
 };
 
-const incialState: ItemList[] = [];
+const initialState: ItemList[] = [];
 
 const reducer = (state: ItemList[], action: ACTION_REDUCER) => {
   let tempTodo = [...state];
@@ -35,31 +35,35 @@ const reducer = (state: ItemList[], action: ACTION_REDUCER) => {
           id: uuid(),
           description: action.payload.description,
           complete: false,
-          date: new Date(),
+          date: new Date()
         });
         return tempTodo;
       }
     case ACTION_TODO.DELETE_TODO:
       if (action.payload?.id) {
-        tempTodo = tempTodo.filter(item => {
+        let newTodoListFiltered = tempTodo.filter(item => {
           return item.id !== action.payload?.id;
         });
-        return tempTodo;
+        return newTodoListFiltered;
       }
 
     case ACTION_TODO.TOGGLE_TODO:
-      if (action.payload?.id) {
-        tempTodo.map(item => {
-          return (item.complete = !item.complete);
-        });
-        return tempTodo;
-      }
+      const mappedListTodoToggle = tempTodo.map(item => {
+        if (item.id === action.payload?.id) {
+          return { ...item, complete: !item.complete };
+        }
+        return item;
+      });
+      return mappedListTodoToggle;
+
     case ACTION_TODO.ORDER_BY_DATE:
       return tempTodo.sort((a, b) => (a.date > b.date ? -1 : 1));
+
+    default:
+      return state;
   }
-  return state;
 };
 
 export const useReducerTodo = () => {
-  return useReducer(reducer, incialState);
+  return useReducer(reducer, initialState);
 };
